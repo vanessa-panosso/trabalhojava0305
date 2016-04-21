@@ -9,11 +9,9 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface Coluna {
 	
-	String nomeCliente() default "";
+	String nome() default "";
 	
-	String end() default"";
-	
-	String telefone() default"";
+	int tamanho() default -1;
 	
 	boolean pk() default false;
 
