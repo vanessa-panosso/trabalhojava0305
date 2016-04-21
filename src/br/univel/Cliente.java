@@ -7,12 +7,24 @@ public class Cliente {
 
 	@Coluna(nome="CadNome", tamanho=100)
 	private String nomeCliente;
+	
 	@Coluna(nome="CadEnd", tamanho=200)
 	private String end;
 	
 	@Coluna(nome="CadTelefone", tamanho=11)
 	private String telefone;
 	
+	@Coluna(nome="CadEstadoCivil")
+	private Estado_Civil estadocivil;
+	
+	public Estado_Civil getEstadocivil() {
+		return estadocivil;
+	}
+
+	public void setEstadocivil(Estado_Civil estadocivil) {
+		this.estadocivil = estadocivil;
+	}
+
 	public int getId() {
 		return id;
 	}
