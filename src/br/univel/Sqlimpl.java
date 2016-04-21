@@ -2,7 +2,7 @@ package br.univel;
 
 import java.sql.PreparedStatement;
 
-public class Sqlipl extends SqlGen {
+public class Sqlimpl extends SqlGen {
 
 	@Override
 	protected String getCreateTable(Object obj) {

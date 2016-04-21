@@ -57,6 +57,17 @@ public class Cliente {
 		this.telefone = telefone;
 	}
 
-	
+	public Cliente() {
+		this(0, null, null, null, null);
+	}
+
+	public Cliente(int id, String nome, String endereco, String telefone, Estado_Civil estCivil) {
+		super();
+		this.id = id;
+		this.nomeCliente = nome;
+		this.end = endereco;
+		this.telefone = telefone;
+		this.estadocivil = estCivil;
+	}
 	
 }
