@@ -6,7 +6,7 @@ public class Principal extends SqlGen {
 
 	@Override
 	protected String getCreateTable(Object obj) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
