@@ -361,6 +361,8 @@ public class Sqlimpl extends SqlGen {
 
 				}
 			}
+			
+			
 			String strSql = sb.toString();
 			System.out.println(strSql);
 
@@ -377,13 +379,13 @@ public class Sqlimpl extends SqlGen {
 			return ps;	}
 
 	@Override
-	protected PreparedStatement getSqlUpdateById(Object obj) {
+	protected PreparedStatement getSqlUpdateById(Connection con, Object obj) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	protected PreparedStatement getSqlDeleteById(Object obj) {
+	protected PreparedStatement getSqlDeleteById(Connection con, Object obj) {
 		// TODO Auto-generated method stub
 		return null;
 	}

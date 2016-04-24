@@ -16,9 +16,9 @@ public abstract class SqlGen {
 	
 	protected abstract PreparedStatement getSqlSelectById(Connection con, Object obj);
 	
-	protected abstract PreparedStatement getSqlUpdateById(Object obj);
+	protected abstract PreparedStatement getSqlUpdateById(Connection con, Object obj);
 	
-	protected abstract PreparedStatement getSqlDeleteById(Object obj);
+	protected abstract PreparedStatement getSqlDeleteById(Connection con, Object obj);
 
 	
 }
