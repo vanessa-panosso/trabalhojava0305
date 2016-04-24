@@ -6,7 +6,7 @@ public abstract class SqlGen {
 	//DDL
 	protected abstract String getCreateTable(Class<Cliente> cl);
 	
-	protected abstract String getDropTable(Object obj);
+	protected abstract String getDropTable(Class<Cliente> cl);
 	
 	// DML
 	protected abstract PreparedStatement getSqlInsert(Object obj);

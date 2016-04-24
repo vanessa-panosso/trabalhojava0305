@@ -8,7 +8,10 @@ public class Sqlimpl extends SqlGen {
 	public Sqlimpl () {
 		String strCreateTable = getCreateTable(Cliente.class);
 		System.out.println(strCreateTable);
-
+		
+		String strDropTable = getDropTable(Cliente.class);
+		System.out.println(strDropTable);
+		
 		Cliente cliente = new Cliente(1, "Maria", "Rua qualquer", "452987-1234", Estado_Civil.Solteiro);
 
 		
@@ -36,7 +39,6 @@ public class Sqlimpl extends SqlGen {
 
 			Field[] atributos = cl.getDeclaredFields();
 
-			// Declaração das colunas
 			{
 				for (int i = 0; i < atributos.length; i++) {
 
@@ -85,7 +87,6 @@ public class Sqlimpl extends SqlGen {
 				}
 			}
 
-			// Declaração das chaves primárias
 			{
 
 				sb.append(",\n\tPRIMARY KEY( ");
@@ -130,9 +131,30 @@ public class Sqlimpl extends SqlGen {
 	}
 
 	@Override
-	protected String getDropTable(Object obj) {
-		// TODO Auto-generated method stub
-		return null;
+	protected String getDropTable(Class<Cliente> cl) {
+		try {
+
+			StringBuilder sb = new StringBuilder();
+
+			
+				String nomeTabela;
+				if (cl.isAnnotationPresent(Tabela.class)) {
+
+					Tabela anotacaoTabela = cl.getAnnotation(Tabela.class);
+					nomeTabela = anotacaoTabela.value();
+
+				} else {
+					nomeTabela = cl.getSimpleName().toUpperCase();
+
+				}
+				sb.append("DROP TABLE ").append(nomeTabela).append(";");
+			
+			return sb.toString();
+
+	} catch (SecurityException e) {
+		throw new RuntimeException(e);
+	}
+		
 	}
 
 	@Override
