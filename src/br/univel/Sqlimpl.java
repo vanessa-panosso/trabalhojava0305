@@ -5,8 +5,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import br.dagostini.basico.Estado_Civil;
-
 public class Sqlimpl extends SqlGen {
 	
 	public Sqlimpl () {
@@ -257,8 +255,7 @@ public class Sqlimpl extends SqlGen {
 					ps.setString(i + 1, String.valueOf(field.get(obj)));
 
 				} else if (field.getType().equals(Estado_Civil.class)) {
-					ps.setString(i + 1, field.Estado_Civil(obj));
-		
+					ps.setString(i + 1, String.valueOf(field.get(obj)));
 				} else {
 					throw new RuntimeException("Tipo não suportado, falta implementar.");
 
