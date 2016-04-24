@@ -1,5 +1,6 @@
 package br.univel;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 public abstract class SqlGen {
@@ -9,7 +10,7 @@ public abstract class SqlGen {
 	protected abstract String getDropTable(Class<Cliente> cl);
 	
 	// DML
-	protected abstract PreparedStatement getSqlInsert(Object obj);
+	protected abstract PreparedStatement getSqlInsert(Connection con, Object obj);
 	
 	protected abstract PreparedStatement getSqlSelectAll(Object obj);
 	

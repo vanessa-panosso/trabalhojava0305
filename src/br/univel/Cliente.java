@@ -69,5 +69,67 @@ public class Cliente {
 		this.telefone = telefone;
 		this.estadocivil = estCivil;
 	}
-	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Cadid;
+		result = prime * result + ((nomeCliente == null) ? 0 : nomeCliente.hashCode());
+		result = prime * result + ((end == null ) ? 0 : end.hashCode());
+		result = prime * result + ((telefone == null ) ? 0 : telefone.hashCode());
+		result = prime * result + ((estadocivil == null ) ? 0 : estadocivil.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		
+		if (obj == null)
+			return false;
+		
+		if (getClass() != obj.getClass())
+			return false;
+		
+		Cliente other = (Cliente) obj;
+		
+		if (Cadid != other.Cadid)
+			return false;
+		
+		if (nomeCliente == null) {
+			if (other.nomeCliente != null)
+				return false;
+		} else if (!nomeCliente.equals(other.nomeCliente))
+			return false;
+		
+		if (end == null) {
+			if (other.end != null)
+				return false;
+		} else if (!end.equals(other.end))
+			return false;
+		
+		if (telefone == null) {
+			if (other.telefone != null)
+				return false;
+		} else if (!telefone.equals(other.telefone))
+			return false;
+		
+		if (estadocivil == null) {
+			if (other.estadocivil != null)
+				return false;
+		} else if (!estadocivil.equals(other.estadocivil))
+			return false;
+		
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Cliente [id=" + Cadid + ", nome=" + nomeCliente +", end=" + end + ", telefone="+ telefone + ", estadocivil" + estadocivil +"]";
+	}
+
 }
+
+
