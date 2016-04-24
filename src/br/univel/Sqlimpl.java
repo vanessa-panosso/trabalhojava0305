@@ -23,9 +23,8 @@ public class Sqlimpl extends SqlGen {
 			con = new Conexao();
 
 			PreparedStatement ps = getSqlInsert(con, cliente);
-
 			ps.executeUpdate();
-
+			
 			ps.close();
 			con.close();
 
@@ -33,6 +32,8 @@ public class Sqlimpl extends SqlGen {
 			e.printStackTrace();
 
 		}
+		
+		String strSelectAll()
 		
 	}
 
