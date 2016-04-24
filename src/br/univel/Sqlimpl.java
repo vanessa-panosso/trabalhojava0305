@@ -332,7 +332,7 @@ public class Sqlimpl extends SqlGen {
 
 				}
 				
-				sb.append("SELECT ").append(nomeTabela).append(" ");
+				sb.append("SELECT * FROM ").append(nomeTabela).append(" WHERE ");
 			}
 			Field[] atributos = cl.getDeclaredFields();
 
@@ -361,8 +361,8 @@ public class Sqlimpl extends SqlGen {
 
 				}
 			}
-			
-			
+			int id = 1;
+			sb.append(" = ").append(id);
 			String strSql = sb.toString();
 			System.out.println(strSql);
 
