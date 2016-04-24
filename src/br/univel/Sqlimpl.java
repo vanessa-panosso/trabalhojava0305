@@ -24,7 +24,9 @@ public class Sqlimpl extends SqlGen {
 
 			PreparedStatement ps = getSqlInsert(con, cliente);
 			ps.executeUpdate();
-			PreparedStatement strSelectAll = getSqlSelectAll(con);
+			ps = getSqlSelectAll(con, cliente);
+			ps = getSqlSelectById(con, cliente);
+
 			ps.close();
 			con.close();
 
@@ -275,16 +277,104 @@ public class Sqlimpl extends SqlGen {
 
 
 	@Override
-	protected PreparedStatement getSqlSelectAll(Object obj) {
-		// TODO Auto-generated method stub
-		return null;
+	protected PreparedStatement getSqlSelectAll(Connection con, Object obj) {
+		Class<? extends Object> cl = obj.getClass();
+
+		StringBuilder sb = new StringBuilder();
+		
+		{
+			String nomeTabela;
+			if (cl.isAnnotationPresent(Tabela.class)) {
+
+				Tabela anotacaoTabela = cl.getAnnotation(Tabela.class);
+				nomeTabela = anotacaoTabela.value();
+
+			} else {
+				nomeTabela = cl.getSimpleName().toUpperCase();
+
+			}
+			sb.append("SELECT * FROM ").append(nomeTabela).append(";");
+		}
+
+		String strSql = sb.toString();
+		System.out.println(strSql);
+
+		PreparedStatement ps = null;
+		try {
+			ps = con.prepareStatement(strSql);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		}
+
+		return ps;
+
 	}
 
 	@Override
-	protected PreparedStatement getSqlSelectById(Object obj) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		protected PreparedStatement getSqlSelectById(Connection con, Object obj) {
+
+			Class<? extends Object> cl = obj.getClass();
+
+			StringBuilder sb = new StringBuilder();
+
+			{
+				String nomeTabela;
+				if (cl.isAnnotationPresent(Tabela.class)) {
+
+					Tabela anotacaoTabela = cl.getAnnotation(Tabela.class);
+					nomeTabela = anotacaoTabela.value();
+
+				} else {
+					nomeTabela = cl.getSimpleName().toUpperCase();
+
+				}
+				
+				sb.append("SELECT ").append(nomeTabela).append(" ");
+			}
+			Field[] atributos = cl.getDeclaredFields();
+
+			for (int i = 0, achou = 0; i < atributos.length; i++) {
+
+				Field field = atributos[i];
+
+				if (field.isAnnotationPresent(Coluna.class)) {
+
+					Coluna anotacaoColuna = field.getAnnotation(Coluna.class);
+
+					if (anotacaoColuna.pk()) {
+
+						if (achou > 0) {
+							sb.append(", ");
+						}
+
+						if (anotacaoColuna.nome().isEmpty()) {
+							sb.append(field.getName().toUpperCase());
+						} else {
+							sb.append(anotacaoColuna.nome());
+						}
+
+						achou++;
+					}
+
+				}
+			}
+			String strSql = sb.toString();
+			System.out.println(strSql);
+
+			PreparedStatement ps = null;
+			try {
+				ps = con.prepareStatement(strSql);
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			}
+
+			return ps;	}
 
 	@Override
 	protected PreparedStatement getSqlUpdateById(Object obj) {

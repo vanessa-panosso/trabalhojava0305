@@ -12,9 +12,9 @@ public abstract class SqlGen {
 	// DML
 	protected abstract PreparedStatement getSqlInsert(Connection con, Object obj);
 	
-	protected abstract PreparedStatement getSqlSelectAll(Object obj);
+	protected abstract PreparedStatement getSqlSelectAll(Connection con, Object obj);
 	
-	protected abstract PreparedStatement getSqlSelectById(Object obj);
+	protected abstract PreparedStatement getSqlSelectById(Connection con, Object obj);
 	
 	protected abstract PreparedStatement getSqlUpdateById(Object obj);
 	
