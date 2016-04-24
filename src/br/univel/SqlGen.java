@@ -4,7 +4,7 @@ import java.sql.PreparedStatement;
 
 public abstract class SqlGen {
 	//DDL
-	protected abstract String getCreateTable(Object obj);
+	protected abstract String getCreateTable(Class<Cliente> cl);
 	
 	protected abstract String getDropTable(Object obj);
 	
@@ -18,4 +18,6 @@ public abstract class SqlGen {
 	protected abstract PreparedStatement getSqlUpdateById(Object obj);
 	
 	protected abstract PreparedStatement getSqlDeleteById(Object obj);
+
+	
 }

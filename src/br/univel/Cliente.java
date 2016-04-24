@@ -3,12 +3,12 @@ package br.univel;
 @Tabela ("Cadastro_Cliente")
 public class Cliente {
 	@Coluna(pk=true)
-	private int id;
+	private int Cadid;
 
 	@Coluna(nome="CadNome", tamanho=100)
 	private String nomeCliente;
 	
-	@Coluna(nome="CadEnd", tamanho=200)
+	@Coluna(nome="CadEnd", tamanho=80)
 	private String end;
 	
 	@Coluna(nome="CadTelefone", tamanho=11)
@@ -26,11 +26,11 @@ public class Cliente {
 	}
 
 	public int getId() {
-		return id;
+		return Cadid;
 	}
 
 	public void setId(int id) {
-		this.id = id;
+		this.Cadid = id;
 	}
 
 	public String getNomeCliente() {
@@ -63,7 +63,7 @@ public class Cliente {
 
 	public Cliente(int id, String nome, String endereco, String telefone, Estado_Civil estCivil) {
 		super();
-		this.id = id;
+		this.Cadid = id;
 		this.nomeCliente = nome;
 		this.end = endereco;
 		this.telefone = telefone;
