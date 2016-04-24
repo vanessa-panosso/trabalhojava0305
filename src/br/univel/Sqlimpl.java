@@ -24,7 +24,7 @@ public class Sqlimpl extends SqlGen {
 
 			PreparedStatement ps = getSqlInsert(con, cliente);
 			ps.executeUpdate();
-			
+			PreparedStatement strSelectAll = getSqlSelectAll(con);
 			ps.close();
 			con.close();
 
@@ -33,7 +33,6 @@ public class Sqlimpl extends SqlGen {
 
 		}
 		
-		String strSelectAll()
 		
 	}
 
