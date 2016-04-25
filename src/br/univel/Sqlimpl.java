@@ -76,7 +76,6 @@ public class Sqlimpl extends SqlGen {
 							nomeColuna = field.getName().toUpperCase();
 						} else {
 							nomeColuna = anotacaoColuna.nome();
-							
 						}
 
 					} else {
@@ -380,7 +379,13 @@ public class Sqlimpl extends SqlGen {
 
 	@Override
 	protected PreparedStatement getSqlUpdateById(Connection con, Object obj) {
-
+		int id = 1;
+		String nome = "Joao";
+		String end = "Rua rosa";
+		String telefone = "4566781234";
+		Estado_Civil estadocivil = null;		
+		estadocivil = estadocivil.Casado;
+		
 		Class<? extends Object> cl = obj.getClass();
 
 		StringBuilder sb = new StringBuilder();
@@ -397,14 +402,38 @@ public class Sqlimpl extends SqlGen {
 
 			}
 			
-			sb.append("UPDATE ").append(nomeTabela).append(" SET ");
+			sb.append("UPDATE ").append(nomeTabela).append("\nSET ");
 			
-//		UPDAT NOMETABEL
-//		SET CAMPO = "NOVO_VALOR"
-//		WHERE CONDICAO
 		}
+		
 		Field[] atributos = cl.getDeclaredFields();
+		for (int i = 0; i < atributos.length; i++) {
+			Field field = atributos[i];
+			Coluna anotacaoColuna = field.getAnnotation(Coluna.class);
+			String nomeColuna;
+			try {
+				field.setAccessible(true);
 
+				Object valor = field.get(obj);
+				if (anotacaoColuna.nome().isEmpty()) {
+					nomeColuna = field.getName().toUpperCase();
+				} else {
+					nomeColuna = anotacaoColuna.nome();
+				}
+				sb.append(nomeColuna).append(" = ").append(valor);
+				if(i==(atributos.length-1)){
+					sb.append("\n");
+				}else{
+					sb.append(", ");
+				}
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		sb.append("WHERE ");
 		for (int i = 0, achou = 0; i < atributos.length; i++) {
 
 			Field field = atributos[i];
@@ -429,8 +458,9 @@ public class Sqlimpl extends SqlGen {
 				}
 
 			}
+			
+			
 		}
-		int id = 1;
 		sb.append(" = ").append(id);
 		String strSql = sb.toString();
 		System.out.println(strSql);
