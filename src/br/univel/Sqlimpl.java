@@ -26,7 +26,7 @@ public class Sqlimpl extends SqlGen {
 			ps.executeUpdate();
 			ps = getSqlSelectAll(con, cliente);
 			ps = getSqlSelectById(con, cliente);
-
+			ps = getSqlUpdateById(con, cliente);
 			ps.close();
 			con.close();
 
@@ -380,8 +380,72 @@ public class Sqlimpl extends SqlGen {
 
 	@Override
 	protected PreparedStatement getSqlUpdateById(Connection con, Object obj) {
-		// TODO Auto-generated method stub
-		return null;
+
+		Class<? extends Object> cl = obj.getClass();
+
+		StringBuilder sb = new StringBuilder();
+
+		{
+			String nomeTabela;
+			if (cl.isAnnotationPresent(Tabela.class)) {
+
+				Tabela anotacaoTabela = cl.getAnnotation(Tabela.class);
+				nomeTabela = anotacaoTabela.value();
+
+			} else {
+				nomeTabela = cl.getSimpleName().toUpperCase();
+
+			}
+			
+			sb.append("UPDATE ").append(nomeTabela).append(" SET ");
+			
+//		UPDAT NOMETABEL
+//		SET CAMPO = "NOVO_VALOR"
+//		WHERE CONDICAO
+		}
+		Field[] atributos = cl.getDeclaredFields();
+
+		for (int i = 0, achou = 0; i < atributos.length; i++) {
+
+			Field field = atributos[i];
+
+			if (field.isAnnotationPresent(Coluna.class)) {
+
+				Coluna anotacaoColuna = field.getAnnotation(Coluna.class);
+
+				if (anotacaoColuna.pk()) {
+
+					if (achou > 0) {
+						sb.append(", ");
+					}
+
+					if (anotacaoColuna.nome().isEmpty()) {
+						sb.append(field.getName().toUpperCase());
+					} else {
+						sb.append(anotacaoColuna.nome());
+					}
+
+					achou++;
+				}
+
+			}
+		}
+		int id = 1;
+		sb.append(" = ").append(id);
+		String strSql = sb.toString();
+		System.out.println(strSql);
+
+		PreparedStatement ps = null;
+		try {
+			ps = con.prepareStatement(strSql);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		}
+
+		return ps;	
 	}
 
 	@Override
