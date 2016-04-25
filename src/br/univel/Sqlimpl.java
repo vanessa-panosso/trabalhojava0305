@@ -380,15 +380,11 @@ public class Sqlimpl extends SqlGen {
 	@Override
 	protected PreparedStatement getSqlUpdateById(Connection con, Object obj) {
 		int id = 1;
-		String nome = "Joao";
-		String end = "Rua rosa";
-		String telefone = "4566781234";
-		Estado_Civil estadocivil = null;		
-		estadocivil = estadocivil.Casado;
-		
+			
 		Class<? extends Object> cl = obj.getClass();
 
 		StringBuilder sb = new StringBuilder();
+		Cliente cliente = new Cliente(1, "Joao", "Rua rosa", "4529873455", Estado_Civil.Casado);
 
 		{
 			String nomeTabela;
@@ -414,33 +410,24 @@ public class Sqlimpl extends SqlGen {
 			try {
 				field.setAccessible(true);
 
-	
+				Object valor = field.get(obj);
+				
 				if (anotacaoColuna.nome().isEmpty()) {
 					nomeColuna = field.getName().toUpperCase();
 				} else {
 					nomeColuna = anotacaoColuna.nome();
-				
-				if (nomeColuna.equals("nomeCliente"))
-					sb.append(nomeColuna).append(" = ").append(nome);
-				if (nomeColuna.equals("end"))
-					sb.append(nomeColuna).append(" = ").append(end);
-				if (nomeColuna.equals("telefone"))
-					sb.append(nomeColuna).append(" = ").append(telefone);
-				if (nomeColuna.equals("estadocivil"))
-					sb.append(nomeColuna).append(" = ").append(estadocivil);
-				
 				}
+				sb.append(nomeColuna).append(" = ").append(valor);
 				if(i==(atributos.length-1)){
 					sb.append("\n");
-					
-					
 				}else{
 					sb.append(", ");
-				
 				}
 			} catch (IllegalArgumentException e) {
 				e.printStackTrace();
-			} 
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		sb.append("WHERE ");
