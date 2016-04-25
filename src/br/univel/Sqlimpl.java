@@ -414,23 +414,33 @@ public class Sqlimpl extends SqlGen {
 			try {
 				field.setAccessible(true);
 
-				Object valor = field.get(obj);
+	
 				if (anotacaoColuna.nome().isEmpty()) {
 					nomeColuna = field.getName().toUpperCase();
 				} else {
 					nomeColuna = anotacaoColuna.nome();
+				
+				if (nomeColuna.equals("nomeCliente"))
+					sb.append(nomeColuna).append(" = ").append(nome);
+				if (nomeColuna.equals("end"))
+					sb.append(nomeColuna).append(" = ").append(end);
+				if (nomeColuna.equals("telefone"))
+					sb.append(nomeColuna).append(" = ").append(telefone);
+				if (nomeColuna.equals("estadocivil"))
+					sb.append(nomeColuna).append(" = ").append(estadocivil);
+				
 				}
-				sb.append(nomeColuna).append(" = ").append(valor);
 				if(i==(atributos.length-1)){
 					sb.append("\n");
+					
+					
 				}else{
 					sb.append(", ");
+				
 				}
 			} catch (IllegalArgumentException e) {
 				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			}
+			} 
 		}
 		
 		sb.append("WHERE ");
