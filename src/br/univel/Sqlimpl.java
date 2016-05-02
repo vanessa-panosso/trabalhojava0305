@@ -9,26 +9,33 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class Sqlimpl extends SqlGen {
-	
+		
 	public Sqlimpl () {
-		
-		try {
+	
+	}
+	
+		public Connection abrirconexcao(){
+			try {
 
-			String url = "jdbc:h2:./banco";
-			String user = "sa";
-			String pass = "sa";
-			Connection con = DriverManager.getConnection(url, user, pass);
-		
-		} catch (SQLException e) {
-			e.printStackTrace();
+				String url = "jdbc:h2:./banco";
+				String user = "sa";
+				String pass = "sa";
+				Connection con = DriverManager.getConnection(url, user, pass);
+				return con;
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return null;
 
+			}
+			
+			
 		}
 		
 		
-	}
 
 	@Override
-	protected String getCreateTable(Class<Cliente> cl) {
+	protected String getCreateTable(Object obj) {
+		Class<? extends Object> cl = obj.getClass();
 		try {
 
 			StringBuilder sb = new StringBuilder();
@@ -130,17 +137,19 @@ public class Sqlimpl extends SqlGen {
 			}
 
 			sb.append("\n);");
-
 			return sb.toString();
 
 		} catch (SecurityException e) {
 			throw new RuntimeException(e);
+			
 		}
 	
 	}
 
 	@Override
-	protected String getDropTable(Class<Cliente> cl) {
+	protected String getDropTable(Object obj) {
+		Class<? extends Object> cl = obj.getClass();
+		
 		try {
 
 			StringBuilder sb = new StringBuilder();
@@ -227,10 +236,9 @@ public class Sqlimpl extends SqlGen {
 		sb.append(')');
 
 		String strSql = sb.toString();
-
-		PreparedStatement ps = null;
+		
 		try {
-			ps = con.prepareStatement(strSql);
+			PreparedStatement ps = con.prepareStatement(strSql);
 
 			for (int i = 0; i < atributos.length; i++) {
 				Field field = atributos[i];
@@ -250,16 +258,23 @@ public class Sqlimpl extends SqlGen {
 
 				}
 			}
+			return ps;
+
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return null;
+
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
+			return null;
+
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
-		}
+			return null;
 
-		return ps;
+		}
+		
 	}
 
 

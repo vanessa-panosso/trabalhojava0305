@@ -7,3 +7,12 @@ INSERT INTO Cadastro_Cliente (CADID, CadNome, CadEnd, CadTelefone, CadEstadoCivi
 2016-05-01 22:56:53 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLException: Table "CADASTRO_CLIENTE" not found; SQL statement:
 INSERT INTO Cadastro_Cliente (CADID, CadNome, CadEnd, CadTelefone, CadEstadoCivil) VALUES (?, ?, ?, ?, ?) [42102-191]
+2016-05-02 01:11:43 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLException: Table "CADASTRO_CLIENTE" not found; SQL statement:
+INSERT INTO Cadastro_Cliente (CADID, CadNome, CadEnd, CadTelefone, CadEstadoCivil) VALUES (?, ?, ?, ?, ?) [42102-191]
+2016-05-02 01:13:20 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLException: Table "CADASTRO_CLIENTE" not found; SQL statement:
+INSERT INTO Cadastro_Cliente (CADID, CadNome, CadEnd, CadTelefone, CadEstadoCivil) VALUES (?, ?, ?, ?, ?) [42102-191]
+2016-05-02 01:15:58 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLException: Table "CADASTRO_CLIENTE" not found; SQL statement:
+INSERT INTO Cadastro_Cliente (CADID, CadNome, CadEnd, CadTelefone, CadEstadoCivil) VALUES (?, ?, ?, ?, ?) [42102-191]

@@ -10,8 +10,9 @@ import java.util.List;
 public class Daoimpl implements Dao<Cliente, Integer> {
 	private PreparedStatement ps;
     private ResultSet resultado;
-    private Connection con;
     private Sqlimpl ex = new Sqlimpl();
+    private Connection con = ex.abrirconexcao();
+
     private List<Cliente> lista;
 	@Override
 	
