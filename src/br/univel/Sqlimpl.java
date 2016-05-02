@@ -21,7 +21,7 @@ public class Sqlimpl extends SqlGen {
 
 		try {
 
-			String url = "jdbc:h2:./aulah2";
+			String url = "jdbc:h2:./banco";
 			String user = "sa";
 			String pass = "sa";
 			con = DriverManager.getConnection(url, user, pass);
