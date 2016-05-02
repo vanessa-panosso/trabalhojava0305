@@ -16,8 +16,8 @@ public class Sqlimpl extends SqlGen {
 	
 		public Connection abrirconexcao(){
 			try {
-
-				String url = "jdbc:h2:./banco";
+				Class.forName("org.h2.Driver");
+				String url = "jdbc:h2:~/banco";
 				String user = "sa";
 				String pass = "sa";
 				Connection con = DriverManager.getConnection(url, user, pass);
@@ -26,6 +26,9 @@ public class Sqlimpl extends SqlGen {
 				e.printStackTrace();
 				return null;
 
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+				return null;
 			}
 			
 			
@@ -136,6 +139,7 @@ public class Sqlimpl extends SqlGen {
 			}
 
 			sb.append("\n);");
+			System.out.println(sb.toString());
 			return sb.toString();
 
 		} catch (SecurityException e) {
@@ -164,9 +168,8 @@ public class Sqlimpl extends SqlGen {
 
 				}
 				sb.append("DROP TABLE ").append(nomeTabela).append(";");
-			
+			System.out.println(sb.toString());
 			return sb.toString();
-
 	} catch (SecurityException e) {
 		throw new RuntimeException(e);
 	}
@@ -257,6 +260,7 @@ public class Sqlimpl extends SqlGen {
 
 				}
 			}
+			System.out.println(ps);
 			return ps;
 
 

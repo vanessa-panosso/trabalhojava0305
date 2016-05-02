@@ -6,7 +6,7 @@ import java.util.List;
 public class Main {
 
 	public Main(Cliente c1, Cliente c2, Cliente c3) {
-		deletaTabela();
+		//deletaTabela();
         criaTabela();
         salva(c1);
         salva(c2);
