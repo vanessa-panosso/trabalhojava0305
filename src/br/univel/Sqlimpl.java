@@ -2,6 +2,7 @@ package br.univel;
 
 import java.lang.reflect.Field;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -20,13 +21,23 @@ public class Sqlimpl extends SqlGen {
 
 		try {
 
-			con = new Conexao();
+			String url = "jdbc:h2:./aulah2";
+			String user = "sa";
+			String pass = "sa";
+			con = DriverManager.getConnection(url, user, pass);
 
 			PreparedStatement ps = getSqlInsert(con, cliente);
 			ps.executeUpdate();
+			
 			ps = getSqlSelectAll(con, cliente);
+			ps.executeUpdate();
+			
 			ps = getSqlSelectById(con, cliente);
+			ps.executeUpdate();
+			
 			ps = getSqlUpdateById(con, cliente);
+			ps.executeUpdate();
+
 			ps.close();
 			con.close();
 
