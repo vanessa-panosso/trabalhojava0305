@@ -110,7 +110,7 @@ public class Sqlimpl extends SqlGen {
 				for (int i = 0, achou = 0; i < atributos.length; i++) {
 
 					Field field = atributos[i];
-
+System.out.println(bnbn);
 					if (field.isAnnotationPresent(Coluna.class)) {
 
 						Coluna anotacaoColuna = field.getAnnotation(Coluna.class);
