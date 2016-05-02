@@ -1,6 +1,8 @@
 package br.univel;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -9,38 +11,14 @@ import java.sql.SQLException;
 public class Sqlimpl extends SqlGen {
 	
 	public Sqlimpl () {
-		String strCreateTable = getCreateTable(Cliente.class);
-		System.out.println(strCreateTable);
 		
-		String strDropTable = getDropTable(Cliente.class);
-		System.out.println(strDropTable);
-		
-		
-		Cliente cliente = new Cliente(1, "Maria", "Rua qualquer", "452987-1234", Estado_Civil.Solteiro);
-		Connection con = null;
-
 		try {
 
 			String url = "jdbc:h2:./banco";
 			String user = "sa";
 			String pass = "sa";
-			con = DriverManager.getConnection(url, user, pass);
-
-			PreparedStatement ps = getSqlInsert(con, cliente);
-			ps.executeUpdate();
-			
-			ps = getSqlSelectAll(con, cliente);
-			ps.executeUpdate();
-			
-			ps = getSqlSelectById(con, cliente);
-			ps.executeUpdate();
-			
-			ps = getSqlUpdateById(con, cliente);
-			ps.executeUpdate();
-
-			ps.close();
-			con.close();
-
+			Connection con = DriverManager.getConnection(url, user, pass);
+		
 		} catch (SQLException e) {
 			e.printStackTrace();
 
@@ -249,7 +227,6 @@ public class Sqlimpl extends SqlGen {
 		sb.append(')');
 
 		String strSql = sb.toString();
-		System.out.println(strSql);
 
 		PreparedStatement ps = null;
 		try {
@@ -307,7 +284,6 @@ public class Sqlimpl extends SqlGen {
 		}
 
 		String strSql = sb.toString();
-		System.out.println(strSql);
 
 		PreparedStatement ps = null;
 		try {
@@ -324,7 +300,7 @@ public class Sqlimpl extends SqlGen {
 	}
 
 	@Override
-		protected PreparedStatement getSqlSelectById(Connection con, Object obj) {
+	protected PreparedStatement getSqlSelectById(Connection con, Object obj, int id ){
 
 			Class<? extends Object> cl = obj.getClass();
 
@@ -371,10 +347,9 @@ public class Sqlimpl extends SqlGen {
 
 				}
 			}
-			int id = 1;
+			id = 1;
 			sb.append(" = ").append(id);
 			String strSql = sb.toString();
-			System.out.println(strSql);
 
 			PreparedStatement ps = null;
 			try {
@@ -386,113 +361,114 @@ public class Sqlimpl extends SqlGen {
 				e.printStackTrace();
 			}
 
-			return ps;	}
+			return ps;	
+		}
 
 	@Override
-	protected PreparedStatement getSqlUpdateById(Connection con, Object obj) {
-		int id = 1;
-			
-		Class<? extends Object> cl = obj.getClass();
+	protected PreparedStatement getSqlUpdateById(Connection con, Object obj, int id) {
 
-		StringBuilder sb = new StringBuilder();
-		Cliente cliente = new Cliente(1, "Joao", "Rua rosa", "4529873455", Estado_Civil.Casado);
+        Class<?> c = obj.getClass();
+        StringBuilder sb = new StringBuilder();
+        String nometabela;
 
-		{
-			String nomeTabela;
-			if (cl.isAnnotationPresent(Tabela.class)) {
+        if (c.isAnnotationPresent(Tabela.class)) {
+            nometabela = c.getAnnotation(Tabela.class).value();
+        } else {
+            nometabela = c.getSimpleName().toUpperCase();
+        }
 
-				Tabela anotacaoTabela = cl.getAnnotation(Tabela.class);
-				nomeTabela = anotacaoTabela.value();
+        sb.append("UPDATE ").append(nometabela).append(" SET ");
 
-			} else {
-				nomeTabela = cl.getSimpleName().toUpperCase();
+        Field[] atributos = c.getDeclaredFields();
 
-			}
-			
-			sb.append("UPDATE ").append(nomeTabela).append("\nSET ");
-			
-		}
-		
-		Field[] atributos = cl.getDeclaredFields();
-		for (int i = 0; i < atributos.length; i++) {
-			Field field = atributos[i];
-			Coluna anotacaoColuna = field.getAnnotation(Coluna.class);
-			String nomeColuna;
-			try {
-				field.setAccessible(true);
+        for (int i = 0; i < atributos.length; i++) {
+            Field field = atributos[i];
+            String nomecoluna;
 
-				Object valor = field.get(obj);
-				
-				if (anotacaoColuna.nome().isEmpty()) {
-					nomeColuna = field.getName().toUpperCase();
-				} else {
-					nomeColuna = anotacaoColuna.nome();
-				}
-				sb.append(nomeColuna).append(" = ").append(valor);
-				if(i==(atributos.length-1)){
-					sb.append("\n");
-				}else{
-					sb.append(", ");
-				}
-			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		sb.append("WHERE ");
-		for (int i = 0, achou = 0; i < atributos.length; i++) {
+            if (field.isAnnotationPresent(Coluna.class)) {
+                Coluna coluna = field.getAnnotation(Coluna.class);
+                if (coluna.nome().isEmpty()) {
+                    nomecoluna = field.getName().toUpperCase();
+                } else {
+                    nomecoluna = coluna.nome();
+                }
+            } else {
+                nomecoluna = field.getName().toUpperCase();
+            }
 
-			Field field = atributos[i];
+            if (i > 0) {
+                sb.append(", ");
+            }
 
-			if (field.isAnnotationPresent(Coluna.class)) {
+            sb.append(nomecoluna).append(" = ?");
+        }
+        sb.append(" WHERE ID = ").append(id);
+        String update = sb.toString();
+        System.out.println(update);
 
-				Coluna anotacaoColuna = field.getAnnotation(Coluna.class);
+        PreparedStatement ps = null;
 
-				if (anotacaoColuna.pk()) {
+        try {
+            ps = con.prepareStatement(update);
 
-					if (achou > 0) {
-						sb.append(", ");
-					}
+            for (int i = 0; i < atributos.length; i++) {
+                Field field = atributos[i];
+                Object type = field.getType();
 
-					if (anotacaoColuna.nome().isEmpty()) {
-						sb.append(field.getName().toUpperCase());
-					} else {
-						sb.append(anotacaoColuna.nome());
-					}
+                field.setAccessible(true);
+                if (type.equals(int.class)) {
+                    ps.setInt(i + 1, field.getInt(obj));
+                } else if (type.equals(String.class)) {
+                    ps.setString(i + 1, String.valueOf(field.get(obj)));
+                } else if (field.getType().isEnum()) {
+                    Object value = field.get(obj);
+                    Method m = value.getClass().getMethod("ordinal");
+                    ps.setInt(i + 1, (Integer) m.invoke(value, null));
+                }
+            }
 
-					achou++;
-				}
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
 
-			}
-			
-			
-		}
-		sb.append(" = ").append(id);
-		String strSql = sb.toString();
-		System.out.println(strSql);
+        return ps;
+    }
 
-		PreparedStatement ps = null;
-		try {
-			ps = con.prepareStatement(strSql);
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		}
-
-		return ps;	
-	}
-
+	
 	@Override
-	protected PreparedStatement getSqlDeleteById(Connection con, Object obj) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    protected PreparedStatement getSqlDeleteById(Connection con, Object obj, int id) {
+        PreparedStatement ps = null;
+        try {
+            Class<?> cl = obj.getClass();
+            StringBuilder sb = new StringBuilder();
+            String nometabela;
+
+            if (cl.isAnnotationPresent(Tabela.class)) {
+                nometabela = cl.getAnnotation(Tabela.class).value();
+            } else {
+                nometabela = cl.getSimpleName().toUpperCase();
+            }
+
+            sb.append("DELETE FROM ").append(nometabela).append(" WHERE ID = ").append(id).append(";");
+            String exc = sb.toString();
+            System.out.println(exc);
+
+            ps = con.prepareStatement(exc);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ps;
+    }
 
 	public static void main(String[] args) {
 		new Sqlimpl();
 	}
+
+	
 }
