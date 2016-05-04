@@ -1,12 +1,14 @@
 package br.univel;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
 public class Main {
 
-	public Main(Cliente c1, Cliente c2, Cliente c3) {
-		//deletaTabela();
+	public Main(Cliente c1, Cliente c2, Cliente c3) throws SQLException {
+		deletaTabela();
         criaTabela();
         salva(c1);
         salva(c2);
@@ -26,17 +28,20 @@ public class Main {
         listaTodos();
     }
 
-    public void criaTabela() {
+    public void criaTabela() throws SQLException {
         Sqlimpl ex = new Sqlimpl();
         Connection con = ex.abrirconexcao();
-;
-        ex.getCreateTable(new Cliente());
+        PreparedStatement ps = con.prepareStatement(ex.getCreateTable(new Cliente()));
+		
+		int res = ps.executeUpdate();
+        con.close();
     }
 
-    public void deletaTabela() {
+    public void deletaTabela() throws SQLException {
         Sqlimpl ex = new Sqlimpl();
         Connection con = ex.abrirconexcao();
-        ex.getDropTable(new Cliente() );
+        PreparedStatement ps = con.prepareStatement(ex.getDropTable(new Cliente()));
+        int res = ps.executeUpdate();
     }
 
     public void salva(Cliente cl) {
@@ -85,7 +90,11 @@ public class Main {
         Cliente c2 = new Cliente(2, "Vanessa", "Rua Boca de Leao", "453238977", Estado_Civil.Solteiro);
         Cliente c3 = new Cliente(3, "Joao", "Avenida Qualquer", "4591234567", Estado_Civil.Divorsiado);
         
-        new Main( c1, c2, c3);
+        try {
+			new Main( c1, c2, c3);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
     }
 }
 

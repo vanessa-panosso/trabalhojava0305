@@ -89,7 +89,8 @@ public class Daoimpl implements Dao<Cliente, Integer> {
 	            resultado = ps.executeQuery();
 
 	            while (resultado.next()) {
-	                Estado_Civil estcivil = Estado_Civil.values()[resultado.getInt("ESTADOCIVIL")];
+	                Estado_Civil estcivil = Estado_Civil.values()[resultado.getInt("CADESTADOCIVIL")];
+	                
 	                lista.add(new Cliente(resultado.getInt("id"), resultado.getString("nome"),
 	                        resultado.getString("endereco"), resultado.getString("telefone"), estcivil));
 	            }

@@ -9,7 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class Sqlimpl extends SqlGen {
-		
+	private Connection con;
 	public Sqlimpl () {
 	
 	}
@@ -20,7 +20,7 @@ public class Sqlimpl extends SqlGen {
 				String url = "jdbc:h2:~/banco";
 				String user = "sa";
 				String pass = "sa";
-				Connection con = DriverManager.getConnection(url, user, pass);
+				con = DriverManager.getConnection(url, user, pass);
 				return con;
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -37,7 +37,7 @@ public class Sqlimpl extends SqlGen {
 		
 
 	@Override
-	protected String getCreateTable(Object obj) {
+	protected String getCreateTable(Object obj) throws SQLException {
 		Class<? extends Object> cl = obj.getClass();
 		try {
 
@@ -243,6 +243,7 @@ public class Sqlimpl extends SqlGen {
 			PreparedStatement ps = con.prepareStatement(strSql);
 
 			for (int i = 0; i < atributos.length; i++) {
+				
 				Field field = atributos[i];
 
 				field.setAccessible(true);
@@ -254,13 +255,13 @@ public class Sqlimpl extends SqlGen {
 					ps.setString(i + 1, String.valueOf(field.get(obj)));
 
 				} else if (field.getType().equals(Estado_Civil.class)) {
-					ps.setString(i + 1, String.valueOf(field.get(obj)));
+					Estado_Civil estadoCivil = null;
+					ps.setLong(i+1, estadoCivil.ordinal());
 				} else {
 					throw new RuntimeException("Tipo não suportado, falta implementar.");
 
 				}
 			}
-			System.out.println(ps);
 			return ps;
 
 
@@ -306,7 +307,7 @@ public class Sqlimpl extends SqlGen {
 		PreparedStatement ps = null;
 		try {
 			ps = con.prepareStatement(strSql);
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
@@ -372,7 +373,8 @@ public class Sqlimpl extends SqlGen {
 			PreparedStatement ps = null;
 			try {
 				ps = con.prepareStatement(strSql);
-				
+				int res = ps.executeUpdate();
+
 			} catch (SQLException e) {
 				e.printStackTrace();
 			} catch (IllegalArgumentException e) {
@@ -428,6 +430,7 @@ public class Sqlimpl extends SqlGen {
 
         try {
             ps = con.prepareStatement(update);
+    		int res = ps.executeUpdate();
 
             for (int i = 0; i < atributos.length; i++) {
                 Field field = atributos[i];
@@ -478,6 +481,8 @@ public class Sqlimpl extends SqlGen {
             System.out.println(exc);
 
             ps = con.prepareStatement(exc);
+    		int res = ps.executeUpdate();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

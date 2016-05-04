@@ -5,16 +5,16 @@ public class Cliente {
 	@Coluna(pk=true)
 	private int Cadid;
 
-	@Coluna(nome="CadNome", tamanho=100)
+	@Coluna(nome="CADNOME", tamanho=100)
 	private String nomeCliente;
 	
-	@Coluna(nome="CadEnd", tamanho=80)
+	@Coluna(nome="CADEND", tamanho=80)
 	private String end;
 	
-	@Coluna(nome="CadTelefone", tamanho=11)
+	@Coluna(nome="CADTELEFONE", tamanho=11)
 	private String telefone;
 	
-	@Coluna(nome="CadEstadoCivil")
+	@Coluna(nome="CADESTADOCIVIL")
 	private Estado_Civil estadocivil;
 	
 	public Estado_Civil getEstadocivil() {
@@ -61,13 +61,13 @@ public class Cliente {
 		this(0, null, null, null, null);
 	}
 
-	public Cliente(int id, String nome, String endereco, String telefone, Estado_Civil estCivil) {
+	public Cliente(int id, String nome, String endereco, String telefone, Estado_Civil string) {
 		super();
 		this.Cadid = id;
 		this.nomeCliente = nome;
 		this.end = endereco;
 		this.telefone = telefone;
-		this.estadocivil = estCivil;
+		this.estadocivil = string;
 	}
 
 	@Override
